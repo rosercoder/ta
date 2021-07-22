@@ -1,0 +1,64 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!-- 引入 layui.css -->
+    <link rel="stylesheet" href="//unpkg.com/layui@2.6.8/dist/css/layui.css">
+
+    <!-- 引入 layui.js -->
+    <script src="//unpkg.com/layui@2.6.8/dist/layui.js"></script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.13/dist/vue.js"></script>
+
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+
+</head>
+
+<body>
+
+    <button type="button" class="layui-btn test1">
+        <i class="layui-icon">&#xe67c;</i>上传图片
+    </button>
+
+    <script>
+
+        $(document).ready(function () {
+            layui.use('upload', function () {
+                var upload = layui.upload;
+
+                //执行实例
+                var uploadInst = upload.render({
+                    elem: '.test1' //绑定元素
+                    , url: '/ta/userState/upload-image' //上传接口
+                    , done: function (res) {
+                        //上传完毕回调
+                    }
+                    , error: function () {
+                        //请求异常回调
+                    }
+                });
+            });
+        });
+
+    </script>
+
+
+<div class="layui-table-cell laytable-cell-2-0-4">
+    <a class="layui-btn layui-btn-xs send-mail" lay-event="edit"
+        title="点击即可发送邮件通知该同学">发送邮件</a> 
+    <a class="layui-btn layui-btn-xs del-photo" lay-event="edit"
+        title="点击即可删除用户上传的图片">删除图片</a> <button type="button"
+        class="layui-btn layui-btn-xs del-photo layui-btn uploadImage-by-hand test-up" lay-event="edit" title="手动上传图片">
+        <i class="layui-icon"></i>上传图片 </button><input class="layui-upload-file" type="file" accept="" name="file">
+</div>
+
+
+
+</body>
+
+</html>

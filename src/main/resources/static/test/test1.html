@@ -1,0 +1,65 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="/ta/userState/upload-image" method="POST"> 
+        <label class="ui_button" for="xFile">上传文件</label>
+        <input type="file"/>
+        <input type="submit" value="Submit">
+    </form>
+
+    <div class="layui-upload">
+        <form method="post" id="sourceupload" action="/ta/userState/upload-image">
+            <div style="padding-left: 50px;margin-bottom: 5px;">
+                <button type="button" class="layui-btn layui-btn-normal" id="choose">选择文件</button>
+                <button type="button" class="layui-btn" id="upload">开始上传</button>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>
+
+
+
+
+
+//   layui.use('table', function () {
+    //     var table = layui.table;
+
+    //     table.render({
+    //       elem: '#test11'
+    //       , url: '/test/demo1.json'
+    //       , defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
+    //         title: '提示'
+    //         , layEvent: 'LAYTABLE_TIPS'
+    //         , icon: 'layui-icon-tips'
+    //       }]
+    //       , title: '用户数据表'
+    //       , cols: [[
+    //         { type: 'checkbox', fixed: 'left' }
+    //         , { field: 'id', title: 'ID', width: 80, fixed: 'left', unresize: true, sort: true }
+    //         , { field: 'username', title: '用户名', width: 120, edit: 'text' }
+    //         , {
+    //           field: 'email', title: '邮箱', width: 150, edit: 'text', templet: function (res) {
+    //             return '<em>' + res.email + '</em>'
+    //           }
+    //         }
+    //         , { field: 'sex', title: '性别', width: 80, edit: 'text', sort: true }
+    //         , { field: 'city', title: '城市', width: 100 }
+    //         , { field: 'sign', title: '签名' }
+    //         , { field: 'experience', title: '积分', width: 80, sort: true }
+    //         , { field: 'ip', title: 'IP', width: 120 }
+    //         , { field: 'logins', title: '登入次数', width: 100, sort: true }
+    //         , { field: 'joinTime', title: '加入时间', width: 120 }
+    //         , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 250 }
+    //       ]]
+    //       , page: true
+    //     });
+
+    //   });
+    //

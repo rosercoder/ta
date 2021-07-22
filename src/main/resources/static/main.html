@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>青年大学习收集系统</title>
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- 引入 layui.css -->
+  <link rel="stylesheet" href="//unpkg.com/layui@2.6.8/dist/css/layui.css">
+
+  <!-- 引入 layui.js -->
+  <script src="//unpkg.com/layui@2.6.8/dist/layui.js"></script>
+  <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+  <link rel="stylesheet" href="./style/style.css">
+
+    <!-- UIkit CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.7.0/dist/css/uikit.min.css" />
+
+  <!-- UIkit JS -->
+  <script src="https://cdn.jsdelivr.net/npm/uikit@3.7.0/dist/js/uikit.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/uikit@3.7.0/dist/js/uikit-icons.min.js"></script>
+
+
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+  <script src="./js/vue.min.js"></script>
+
+  <script>
+    var host = 'http://127.0.0.1:8096'
+    // var host = ""
+
+    var isDebug = true;
+
+
+    // 获取 “title”，只执行一次
+    $.ajax({
+      url: host + "/ta/userState/obtainTitle"
+      , success: function (data) {
+        $('#title').text(data)
+      }
+
+    });
+  </script>
+
+</head>
+
+<body>
+
+  <!-- <div class="uk-container"></div> -->
+
+
+  <div class="layui-layout layui-layout-admin">
+
+    <div id="top-bar" align="right">青年大学习收集系统</div>
+
+    
+    <div align="center"  >
+        <span id="title"  onclick="modifyTitle()" title="点击即可修改" >第十一集第五期</span>
+    </div>
+
+    <script>
+
+      // 修改标题
+      function modifyTitle() {
+
+        // 获取当前标题
+        var title = $('#title').text().replace(/\s+/g, "")
+
+        layer.prompt({
+          title: '请输入信息期数'
+          , formType: 0
+          , value: title
+          }
+          , function (pass, index) {
+            console.log(pass == title)
+            if (pass == title) {
+
+            } else {
+
+              $.ajax({
+                url: host + "/ta/userState/modifyTitle"
+                , data: {
+                  "newTitle": pass,
+                }
+                , success: function (data) {
+                  $('#title').text(pass)
+                  updateTable()
+                }
+
+              });
+
+            }
+            layer.close(main);
+            layer.msg('演示完毕！您的口令：' + pass + '<br>您最后写下了：');
+          });
+      }
+    </script>
+
+
+    <!-- 左侧配置栏 -->
+    <div id="offcanvas-slide" uk-offcanvas="overlay: true">
+        <div class="uk-offcanvas-bar">
+            <button class="uk-offcanvas-close" type="button" uk-close></button>
+
+            <div>
+              hello world
+            </div>
+
+
+        </div>
+    </div>
+
+
+
+
+    <div style="margin: 0 auto;">
+      <div style="float: right;">
+        <button class="uk-button uk-button-default uk-margin-small-right layui-btn" type="button"
+          uk-toggle="target: #offcanvas-slide" title="点击此处更改配置">配置</button>
+      </div>
+      <hr>
+
+      <div class="layui-col-xs9 layui-col-md2" style="margin-top:10px">
+
+      </div>
+
+      <div class="layui-col-md8" style="display: block;">
+        <div class="layui-tab">
+          <ul class="layui-tab-title">
+            <li class="layui-this">主界面</li>
+            <li>用户管理</li>
+            <li>日志输出</li>
+            <li>通知界面</li>
+          </ul>
+
+          <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+
+              <fieldset class="layui-elem-field layui-field-title">
+                <!-- <div style="float:right;"> -->
+                  <!-- <div class="layui-form-item"> -->
+                  <div class="layui-input-block" style="float: right;">
+                    <select name="city" lay-verify="required " id="categorys" style="height: 30px;">
+                      <option value="所有用户">所有用户</option>
+                      <option value="已交用户">已交用户</option>
+                      <option value="未交用户">未交用户</option>
+                    </select>
+                    <!-- </div> -->
+                  <!-- </div> -->
+                </div>
+              </fieldset>
+
+              <table class="layui-hide" id="test" style="margin: 0px 0px;border: 2px solid pink;"></table>
+
+              <script>
+
+                // 更新第一张表格内容
+                function updateTable() {
+                  window.table1Content = ''; // 第一个分页的表格内容
+
+                  layui.use('table', function () {
+                    var table = layui.table;
+                    table.render({
+                      elem: '#test'
+                      , url: host + '/ta/userState/listUser'
+                      , page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+                        layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+                        //,curr: 5 //设定初始在第 5 页
+                        , groups: 1 //只显示 1 个连续页码
+                        , first: false //不显示首页
+                        , last: false //不显示尾页
+                      }
+                      // , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+
+                      , height: 500 // 设置高度， 超过这个高度就显示滚动条
+
+                      , cols: [
+                        [
+                          { field: 'sno', width: 150, title: 'ID', sort: true }
+                          , { field: 'name', width: 150, title: '用户名' }
+                          , { field: 'isSubmit', width: 150, title: 'isSubmit' }
+                          , { field: 'submitTime', width: 180, title: '上传时间' }
+                          , { fixed: 'right', width: 300, align: 'center', toolbar: '#barDemo' }
+                        ]]
+                      , where: { is: window.tableParam }
+                      , done: function (res, curr, count) {
+                        //如果是异步请求数据方式，res即为你接口返回的信息。
+                        //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
+
+                        window.table1Content = ''
+                        for (let i = 0; i < res.data.length; i++) {
+                          window.table1Content += "  " + res.data[i].name
+                        }
+                        // console.log(window.table1Content)
+
+
+                        // 获取学号参数
+                        $(".upload-image-web").click(function (data) {
+                          // 动作触发后执行的代码!!
+                          var index = $(this).parent().parent().parent().attr('data-index')
+                          window.currentSno = res.data[main].sno  // 当前学号
+                        });
+
+
+                        // web 端口手动图片上传
+                        layui.use('upload',function () {
+
+                          var upload = layui.upload;
+
+                          //执行实例
+                          var uploadInst = upload.render({
+                            elem: '.upload-image-web' //绑定元素
+                            , url: '/ta/userState/upload-image' //上传接口
+                            , acceptMime: 'image/*'   // 只能上传图片
+                            , done: function (res) {
+                              //上传完毕回调
+                              // console.log(res)
+                              table.reload('test');
+
+                            }
+                            // 图片上传携带参数
+                            , before: function (obj) {
+                              this.data = { "sno": window.currentSno, "type": "1" }//携带参数
+                              obj.preview(function (index, file, result) {
+                                if (file.size > 20 * 1024 * 1024) {                 //判断上传每个图片大小
+                                  // delete files[index];                     //过大删除指定图片
+                                  // $('#remove_' + index).remove();   //展示容器移除
+                                  layer.msg('文件大小不得超过20M', { icon: 2 });  //layui弹出层，icon：5，时，是一个嘴角向下的脸
+                                } else {
+                                  $('#demo1').attr('src', result); //图片链接（base64） 用来显示返回的文件
+                                }
+                              });
+                            }
+
+                            , error: function () {
+                              console.log("error")
+                              //请求异常回调
+                            }
+                          });
+
+                        })
+
+                        $('.send-mail').click(function () {
+
+                          // console.log('11111')
+
+                          //prompt层
+                          layer.prompt({
+                            title: '指定邮件内容'
+                            , formType: 2
+                            , value: '请上交青年大学习'
+                          }
+                            , function (pass, index) {
+                              layer.close(main);
+                              layer.msg('演示完毕！您的口令：' + pass);
+                              sendMail(pass)
+                            });
+
+                        })
+                      }
+
+                    });
+                  });
+
+                }
+
+
+                // 刷新表格内容
+                function refreshTable() {
+                  var upload = layui.upload;
+                  table.reload('test');
+                }
+
+
+                $(document).ready(function () {
+                  // 开始写 jQuery 代码...
+
+                  // 更新日志
+                  // 使用 vue 进行数据的绑定
+                  setTimeout(function () {
+
+
+                  }, 10000);
+
+                  if(!isDebug){
+
+                  // 检查是否需要进行更新
+                  setInterval(function () {
+
+                    $.ajax({
+                      type: "get",
+                      url: host + "/ta/userState/isUpdate",
+                      async: "true",      // 默认的，可不写
+                      success: function (data) {
+                        if (data) {
+                          //显示自动关闭倒计秒数
+                          layer.alert('数据更新', {
+                            time: 5 * 1000
+                            , success: function (layero, index) {
+                              var timeNum = this.time / 1000, setText = function (start) {
+                                layer.title((start ? timeNum : --timeNum) + ' 秒后关闭', main);
+                              };
+                              setText(!0);
+                              this.timer = setInterval(setText, 1000);
+                              if (timeNum <= 0) clearInterval(this.timer);
+                            }
+                            , end: function () {
+                              clearInterval(this.timer);
+                            }
+                          });
+
+                          refreshTable()
+                        }
+
+                      }
+                    });
+                  }, 2000);
+                }
+
+                  // setTimeout(function () {
+
+                  // }, 10000);
+
+                  updateTable();
+
+                  $("#categorys>option").click(function () {
+                    // 动作触发后执行的代码!!
+                    var tmp = $('#categorys').val();
+                    // console.log(tmp)
+                    if (tmp == '所有用户') {
+                      window.tableParam = ''
+                    } else if (tmp == '已交用户') {
+                      window.tableParam = true;
+                    } else if (tmp == '未交用户') {
+                      window.tableParam = false;
+                    }
+
+                    updateTable();
+
+                  });
+
+                  // 手动刷新表格内容
+                  $('#refresh').click(function () {
+                    refreshTable()
+                  })
+
+                  // 使用定时任务来刷新表格内容
+                  // setTimeout(function () {
+                  //   refreshTable()
+                  // }, 10000);
+
+                  var isbind = true;
+
+
+                });
+
+              </script>
+
+            <script type="text/html" id="barDemo">
+              <a class="layui-btn layui-btn-xs send-mail" lay-event="edit" title="点击即可发送邮件通知该同学">发送邮件</a>
+              <a class="layui-btn layui-btn-xs del-photo" lay-event="edit" title="点击即可删除用户上传的图片">删除图片</a>
+              <button type="button" class="layui-btn layui-btn-xs del-photo  layui-btn uploadImage-by-hand test-up upload-image-web" lay-event="edit" title="手动上传图片">
+                    <i class="layui-icon">&#xe67c;</i>上传图片
+              </button>
+            </script>
+
+              <div style="float: right;">
+                <button type="button" class="layui-btn">复制</button>
+                <button type="button" class="layui-btn" id="refresh">刷新</button>
+                <button type="button" class="layui-btn" id="Group-email">群发邮件</button>
+                <button type="button" class="layui-btn">上传</button>
+                <button type="button" class="layui-btn" onclick="package()">下载</button>
+              </div>
+
+              <script>
+
+                function package() {
+                  //页面层
+                  layer.open({
+                    type: 1,
+                    title: false,
+                    closeBtn: 0,
+                    shadeClose: true,
+                    skin: 'layui-layer-rim', //加上边框
+                    area: ['420px', '280px'], //宽高
+                    content: '<div align="center">'+
+                                  '<br>'+
+                                  '<a href="/ta/userState/photo?is=true" style="color:black">'+
+                                        '<button type="button" class="layui-btn" style="width:30%">已上传</button>'+
+                                  '</a><hr>'+
+                                  '<a href="/ta/userState/photo?is=false" style="color:black">'+
+                                            '<button type="button" class="layui-btn" style="width:30%">未上传</button>'+
+                                  '</a><hr>'+
+                                  '<a href="/ta/userState/zip.zip" style="color:black">'+
+                                          '<button type="button" class="layui-btn" style="width:30%">打包下载</button>'+
+                                  '</a><hr>'+
+                             '</div>'
+                  });
+                }
+
+                $('#Group-email').click(function () {
+                  //页面层
+                  layer.confirm('是否对下面用户群发邮件:' + "\n" + window.table1Content, {
+                    btn: ['发送', '取消'] //按钮
+                  }, function () {
+
+                    var data = window.table1Content.split('  ')
+                    // for (let i = 0; i < data.length; i++) {
+                    //   console.log(data[i])
+                    // }
+
+                  }, function () {
+                    layer.msg('取消');
+                  });
+
+
+                })
+
+                // 发送邮件 to 收信方、内容
+                function sendMail(to, ontent) {
+
+                  $.ajax({
+                    url: host + "/ta/userState/mailSend",
+                    data: {
+                      "to": to,
+                      "content": content,
+                    },
+                    dataType: "json",
+                    success: function (result) {
+                      // console.log(result)
+                      if (result)
+                        layer.msg('success')
+                      else
+                        layer.msg('fail')
+                    }
+                  });
+
+                }
+              </script>
+
+            </div>
+   
+            <!-- 用户管理模块 -->
+            <div class="layui-tab-item">
+
+              <div class="layui-form" id="app">
+
+              <table class="layui-hide" id="user-op"></table>
+              
+                <script>
+                  layui.use('table', function(){
+                        var table = layui.table;
+                        table.render({
+                          elem: '#user-op'
+                          ,url:host + '/ta/user/list'
+                          ,page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+                            layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+                            //,curr: 5 //设定初始在第 5 页
+                            ,groups: 1 //只显示 1 个连续页码
+                            ,first: false //不显示首页
+                            ,last: false //不显示尾页
+                            
+                          }
+                          ,cols: [[
+                            {field:'sno', width:150, title: 'ID', sort: true}
+                            ,{field:'name', width:150, title: 'name'}
+                            ,{field:'uuid', width:300, title: 'uuid'}
+                            ,{field:'email', width:200, title: 'email'}
+                          ]]
+                          ,page: true
+                        });
+                      });
+                </script>
+
+              </div>
+
+              <script>
+
+
+              </script>
+
+              <br><br>
+
+              <div style="float: right;">
+                <button type="button" class="layui-btn">添加用户</button>
+                <button type="button" class="layui-btn">导入用户</button>
+                <button type="button" class="layui-btn">用户导出</button>
+              </div>
+            </div>
+
+            <div class="layui-tab-item" id="log">
+            <div v-for="todo in logList">
+              <p>{{todo}}</p><hr>
+            </div>
+
+            </div>
+
+            <script>
+
+              var scn_data = {
+                msg: {
+                  sum: 10, timeLong: 10
+                },
+                dtu: { on: 150, off: 150 },
+                plc: { on: 10, off: 10 },
+                industy: { v1: 10, v2: 11, v3: 12, v3: 14, v4: 15, v5: 17, v6: 18 },
+                online: { v1: 10, v2: 11, v3: 12, v3: 14, v4: 15, v5: 17, v6: 18 },
+
+                logList: []
+              }
+
+              $(document).ready(function () {
+                if (!isDebug) {
+                  setInterval(function () {
+
+                    $.ajax({
+                      url: host + "/ta/log/list",
+                      data: {
+                        "test": "test",
+                      },
+                      success: function (data) {
+                        var newData = []
+
+                        for (let i = 0; i < data.length; i++) {
+                          newData.push(data[i].content);
+                        }
+
+                        scn_data.logList = newData
+                        // console.log(scn_data.logList)
+                      }
+
+                    });
+                  }, 1000)
+                }
+              });
+
+
+              var log = new Vue({
+                el: '#log',
+                data: scn_data
+              })
+
+            </script>
+
+            <div class="layui-tab-item">
+
+              <!-- 
+            <div id="tmp" style="padding-right: 20px;">
+
+
+              <div class="layui-form-item">
+                <label class="layui-form-label">学号</label>
+                <div class="layui-input-block">
+                  <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder=""
+                    class="layui-input" value="111111" disabled>
+                </div>
+
+                <label class="layui-form-label">性别</label>
+                <div class="layui-input-block">
+                  <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder=""
+                    class="layui-input" value="111111">
+                </div>
+
+                <label class="layui-form-label">姓名</label>
+                <div class="layui-input-block">
+                  <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder=""
+                    class="layui-input" value="111111">
+                </div>
+
+              </div>
+            </div> -->
+
+              <!-- <script>
+              layer.open({
+                type: 1,
+                skin: 'layui-layer-rim', //加上边框
+                area: ['420px', '240px'], //宽高
+                content: $('#tmp').html()
+              });
+            </script> -->
+
+            </div>
+
+          </div>
+        </div>
+
+        <script>
+          //注意：选项卡 依赖 element 模块，否则无法进行功能性操作
+          layui.use('element', function () {
+            var element = layui.element;
+
+            //…
+          });
+        </script>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</body>
+
+</html>

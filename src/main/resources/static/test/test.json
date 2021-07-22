@@ -1,0 +1,39 @@
+{
+    "code":0,
+    "msg":"",
+    "count":"10",
+    "data":[
+        {
+            "id":1,"username":"username","sex":"sex","city":"citr","sign":"123456",
+            "experience":1,"score":1,"classify":1,"wealth":1
+        },       {
+            "id":2,"username":"username","sex":"sex","city":"citr","sign":"123456",
+            "experience":1,"score":1,"classify":1,"wealth":1
+        },       {
+            "id":3,"username":"username","sex":"sex","city":"citr","sign":"123456",
+            "experience":1,"score":1,"classify":1,"wealth":1
+        },       {
+            "id":4,"username":"username","sex":"sex","city":"citr","sign":"123456",
+            "experience":1,"score":1,"classify":1,"wealth":1
+        },       {
+            "id":5,"username":"username","sex":"sex","city":"citr","sign":"123456",
+            "experience":1,"score":1,"classify":1,"wealth":1
+        },       {
+            "id":6,"username":"username","sex":"sex","city":"citr","sign":"123456",
+            "experience":1,"score":1,"classify":1,"wealth":1
+        },       {
+            "id":7,"username":"username","sex":"sex","city":"citr","sign":"123456",
+            "experience":1,"score":1,"classify":1,"wealth":1
+        },       {
+            "id":8,"username":"username","sex":"sex","city":"citr","sign":"123456",
+            "experience":1,"score":1,"classify":1,"wealth":1
+        },       {
+            "id":9,"username":"username","sex":"sex","city":"citr","sign":"123456",
+            "experience":1,"score":1,"classify":1,"wealth":1
+        },       {
+            "id":10,"username":"username","sex":"sex","city":"citr","sign":"123456",
+            "experience":1,"score":1,"classify":1,"wealth":1
+        }
+
+    ]
+}
